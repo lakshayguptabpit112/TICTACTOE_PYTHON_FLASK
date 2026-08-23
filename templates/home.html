@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p>Let's Play...</p>
+    <h1>TIC TAC TOE</h1>
+    
+    <form action="/difficulty" method="POST" style="margin-top: 3vh;">
+        <button class="PlayButton" type="submit">Start</button>
+    </form>
+{% endblock %}

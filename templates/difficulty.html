@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <style>
+        form {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+            margin-top: 1.5vh;
+        }
+    
+    .hidden-radio {
+        display: none;
+    }
+    
+    .btn {
+        background-color: #fff;
+        color: #111;
+        padding: 1.5vh;
+        border: 2px solid #111;
+        border-radius: 8px;
+        font-size: clamp(0.9rem, 2.5vh, 1.1rem);
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        font-weight: 500;
+        display: block;
+    }
+    
+    .btn:hover {
+        background-color: #f0f0f0;
+    }
+
+    .hidden-radio:checked + .btn {
+        background-color: #111;
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .submit-btn {
+        background-color: #28a745;
+        color: #fff;
+        padding: 1.5vh;
+        border: none;
+        border-radius: 8px;
+        font-size: clamp(1rem, 3vh, 1.2rem);
+        cursor: pointer;
+        margin-top: 2vh;
+        width: 100%;
+        transition: background-color 0.2s;
+        font-weight: bold;
+    }
+
+    .submit-btn:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>Select Mode</h1>
+    <p>Choose your difficulty level.</p>
+    
+    <form action="/SetDifficulty" method="POST">
+        <div class="btn-group">
+            <input type="radio" name="difficulty" id="easy" value="EASY" class="hidden-radio" required>
+            <label for="easy" class="btn">Easy</label>
+
+            <input type="radio" name="difficulty" id="medium" value="MEDIUM" class="hidden-radio">
+            <label for="medium" class="btn">Medium</label>
+
+            <input type="radio" name="difficulty" id="hard" value="HARD" class="hidden-radio">
+            <label for="hard" class="btn">Hard</label>
+        </div>
+        
+        <p style="margin-top: 2vh; font-weight: bold;">Who goes first?</p>
+        <div class="btn-group" style="margin-top: 1vh; flex-direction: row;">
+            <input type="radio" name="first_player" id="first_human" value="HUMAN" class="hidden-radio" required checked>
+            <label for="first_human" class="btn" style="flex: 1; padding: 1vh;">You</label>
+
+            <input type="radio" name="first_player" id="first_npc" value="NPC" class="hidden-radio">
+            <label for="first_npc" class="btn" style="flex: 1; padding: 1vh;">NPC</label>
+        </div>
+
+        <button type="submit" class="submit-btn">Let's Play!</button>
+    </form>
+    
+    <p class="backbutton" onclick="window.location.href='/'">Back</p>
+{% endblock %}

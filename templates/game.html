@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5vmin;
+        margin: 1vh auto 8vh auto;
+        width: 100%;
+        max-width: min(100%, 45vh);
+    }
+    
+    .cell-btn {
+        background-color: #fff;
+        color: #111;
+        border: 2px solid #111;
+        border-radius: 8px;
+        font-size: clamp(1.5rem, 6vh, 3.5rem);
+        aspect-ratio: 1 / 1;
+        height: auto;
+        width: 100%;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .cell-btn:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>Game On Difficulty {{difficulty}}!</h1>
+    <p class="Result">{{result}}</p>
+    
+    <div class="board">
+        <button type="button" class="cell-btn" id="cell-0-0" onclick="makeMove(0, 0)">{{Board[0][0]}}</button>
+        <button type="button" class="cell-btn" id="cell-0-1" onclick="makeMove(0, 1)">{{Board[0][1]}}</button>
+        <button type="button" class="cell-btn" id="cell-0-2" onclick="makeMove(0, 2)">{{Board[0][2]}}</button>
+        
+        <button type="button" class="cell-btn" id="cell-1-0" onclick="makeMove(1, 0)">{{Board[1][0]}}</button>
+        <button type="button" class="cell-btn" id="cell-1-1" onclick="makeMove(1, 1)">{{Board[1][1]}}</button>
+        <button type="button" class="cell-btn" id="cell-1-2" onclick="makeMove(1, 2)">{{Board[1][2]}}</button>
+        
+        <button type="button" class="cell-btn" id="cell-2-0" onclick="makeMove(2, 0)">{{Board[2][0]}}</button>
+        <button type="button" class="cell-btn" id="cell-2-1" onclick="makeMove(2, 1)">{{Board[2][1]}}</button>
+        <button type="button" class="cell-btn" id="cell-2-2" onclick="makeMove(2, 2)">{{Board[2][2]}}</button>
+    </div>
+    
+    <p class="backbutton">
+        {% if result in ['Player Won', 'NPC Won', 'Tie'] %}
+            Back
+        {% else %}
+            Good luck!
+        {% endif %}
+    </p>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let b = document.querySelector(".backbutton");
+
+    b.addEventListener("click", () => {
+        if(b.innerText === "Back"){
+            window.location.href = "/difficulty";
+        }
+    });
+
+    function makeMove(row, col) {
+        const payload = { row: row, col: col };
+
+        fetch('/play_turn', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const board = data.board;
+            const result = data.result;
+            
+            for (let r = 0; r < 3; r++) {
+                for (let c = 0; c < 3; c++) {
+                    let button = document.getElementById('cell-' + r + '-' + c);
+                    button.innerText = board[r][c];
+                }
+            }
+            let resultElement = document.querySelector(".Result");
+            let b = document.querySelector(".backbutton");
+            
+            resultElement.innerText = result;
+            if ( (result === "Player Won" ) || (result === "NPC Won" ) || (result === "Tie" ) ){
+                b.innerText = "Back";
+            }
+        });
+    }
+</script>
+{% endblock %}
