@@ -56,8 +56,13 @@ def select_difficulty():
 #Accepts Difficulty And Set It
 @app.route('/SetDifficulty',methods=['GET','POST'])
 def SetDifficulty():
-    selected_value = request.form.get('difficulty')
-    first_player = request.form.get('first_player') 
+    if  'difficulty' in request.form and 'first_player' in request.form:
+        
+        selected_value = request.form.get('difficulty')
+        first_player = request.form.get('first_player') 
+
+    else:
+        return redirect(url_for('select_difficulty'))
     
     if not selected_value or selected_value not in Difficulty.__members__:
         return redirect(url_for('select_difficulty'))

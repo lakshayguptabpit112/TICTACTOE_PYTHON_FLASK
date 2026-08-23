@@ -14,7 +14,8 @@ body {
   flex-direction: column;
   justify-content: center; 
   align-items: center;     
-  height: 100vh;       
+  height: 100vh; /* Fallback for older browsers */
+  height: 100dvh; /* Dynamic viewport height fixes mobile URL bar cutoff */
   padding: 2vh 2vw;
   overflow: hidden; 
 }
@@ -25,6 +26,9 @@ header, main, footer {
   text-align: center;
 }
 
+header, footer {
+  flex-shrink: 0;
+}
 header {
   background-color: #ffffff;
   padding: 2vh 1rem;
@@ -34,7 +38,8 @@ header {
 
 main {
   background-color: #ffffff;
-  padding: 3vh 2rem;
+  /* Add extra padding at the bottom (8vh) to create a safe zone for the back button */
+  padding: 3vh 2rem 8vh 2rem;
   border-top: 1px solid #f0f0f0;
   border-bottom: 1px solid #f0f0f0;
   
@@ -54,7 +59,6 @@ main {
   cursor: pointer;
   font-weight: bold;
   color: #333;
-  margin: 0 !important;
 }
 
 main h1 {
