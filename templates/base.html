@@ -10,20 +10,23 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <div class="app-shell">
 
-    <header>
+    <header class="site-header">
         <nav>
-            <h2>Tic Tac Toe</h2>
+            <a class="brand" href="{{ url_for('Home') }}">Tic Tac Toe</a>
         </nav>
     </header>
 
-    <main>
+    <main id="main-content">
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
+    <footer class="site-footer">
         <p>&copy; Tic Tac Toe | Lakshay</p>
     </footer>
+
+    </div>
 
     {% block extra_js %}{% endblock %}
 </body>

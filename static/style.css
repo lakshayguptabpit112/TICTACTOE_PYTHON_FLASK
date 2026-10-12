@@ -1,88 +1,85 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root {
+  color-scheme: light;
+  --ink: #161616;
+  --muted: #667085;
+  --paper: #ffffff;
+  --page: #f4f6f8;
+  --line: #d7dce2;
+  --accent: #dbbc09;
+  --success: #218838;
+  --focus: #155eef;
 }
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { min-width: 320px; background: var(--page); }
 body {
-  font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1.6;
-  background-color: #f9f9f9;
-  color: #333;
-  
-  display: flex;
-  flex-direction: column;
-  justify-content: center; 
-  align-items: center;     
-  height: 100vh; /* Fallback for older browsers */
-  height: 100dvh; /* Dynamic viewport height fixes mobile URL bar cutoff */
-  padding: 2vh 2vw;
-  overflow: hidden; 
+  min-height: 100vh; min-height: 100dvh; padding: clamp(0.75rem, 2vw, 1.5rem);
+  overflow-x: hidden; overflow-y: auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5; color: var(--ink); background: var(--page);
 }
-
-header, main, footer {
-  width: 100%;
-  max-width: 500px; 
-  text-align: center;
+button, label { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+.app-shell {
+  display: flex; flex-direction: column; width: min(100%, 42rem);
+  min-height: calc(100dvh - 2 * clamp(0.75rem, 2vw, 1.5rem)); margin: 0 auto;
+  overflow: hidden; background: var(--paper); border-radius: 1rem;
+  box-shadow: 0 0.5rem 2rem rgba(17, 24, 39, 0.08);
 }
-
-header, footer {
-  flex-shrink: 0;
-}
-header {
-  background-color: #ffffff;
-  padding: 2vh 1rem;
-  border-radius: 12px 12px 0 0; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-}
-
+.site-header { flex: 0 0 auto; padding: clamp(0.9rem, 2.5vw, 1.25rem) 1rem; text-align: center; border-bottom: 1px solid #edf0f2; }
+.brand { color: var(--ink); font-size: clamp(1.1rem, 3vw, 1.35rem); font-weight: 750; text-decoration: none; }
 main {
-  background-color: #ffffff;
-  /* Add extra padding at the bottom (8vh) to create a safe zone for the back button */
-  padding: 3vh 2rem 8vh 2rem;
-  border-top: 1px solid #f0f0f0;
-  border-bottom: 1px solid #f0f0f0;
-  
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex: 1 1 auto;
-  min-height: 0;
-  
-  position: relative;
+  display: flex; flex: 1 1 auto; min-height: 0; flex-direction: column; align-items: center; justify-content: center;
+  padding: clamp(1.25rem, 5vw, 3rem) clamp(1rem, 6vw, 3rem); text-align: center;
 }
-
-.backbutton {
-  position: absolute;
-  bottom: 2vh;
-  cursor: pointer;
-  font-weight: bold;
-  color: #333;
+main h1 { color: var(--ink); font-size: clamp(1.65rem, 5vw, 2.5rem); line-height: 1.15; }
+main p { color: var(--muted); font-size: clamp(0.95rem, 2.3vw, 1.1rem); }
+.eyebrow { margin-bottom: 0.35rem; color: #806c00; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
+.page-subtitle { max-width: 32rem; margin-top: 0.6rem; }
+.home-content, .difficulty-content, .game-content { width: min(100%, 34rem); }
+.home-form { margin-top: clamp(1.5rem, 5vw, 2.25rem); }
+.PlayButton, .submit-btn, .btn, .backbutton, .cell-btn { min-height: 2.9rem; }
+.PlayButton, .submit-btn {
+  width: 100%; border: 0; border-radius: 0.7rem; cursor: pointer; font-weight: 750;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
-
-main h1 {
-  font-size: clamp(1.5rem, 5vh, 2.5rem);
-  margin-bottom: 1vh;
-  color: #111;
+.PlayButton { max-width: 16rem; padding: 0.75rem 1.25rem; color: var(--ink); font-size: clamp(1.05rem, 3vw, 1.3rem); background: var(--accent); }
+.PlayButton:hover, .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 0.35rem 0.8rem rgba(17, 24, 39, 0.14); }
+.settings-form { width: 100%; max-width: 22rem; margin: 1.5rem auto 0; text-align: center; }
+fieldset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; min-width: 0; margin: 0 0 1.3rem; padding: 0; border: 0; }
+fieldset:nth-of-type(2) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+legend { width: 100%; margin-bottom: 0.55rem; color: var(--ink); font-weight: 750; text-align: center; }
+.hidden-radio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
+.btn { display: grid; min-height: 3rem; place-items: center; padding: 0.65rem 0.5rem; color: var(--ink); text-align: center; background: var(--paper); border: 2px solid var(--line); border-radius: 0.7rem; cursor: pointer; font-weight: 650; transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease; }
+.btn:hover { background: #f5f6f7; border-color: #aab2bb; }
+.hidden-radio:checked + .btn { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+.hidden-radio:focus-visible + .btn, button:focus-visible, .backbutton:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.submit-btn { padding: 0.8rem 1rem; color: var(--paper); font-size: 1.05rem; background: var(--success); }
+.backbutton { margin-top: 1.2rem; padding: 0.65rem 1rem; color: var(--ink); background: transparent; border: 2px solid var(--line); border-radius: 0.65rem; cursor: pointer; font-weight: 700; }
+.backbutton[hidden] { display: none; }
+.game-heading { margin-bottom: 0.8rem; }
+.status-message { min-height: 1.7rem; color: var(--ink); font-weight: 750; }
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.45rem, 2vw, 0.85rem); width: min(100%, 30rem, 72vw); margin: clamp(1rem, 3vw, 1.6rem) auto; aspect-ratio: 1; }
+.cell-btn { display: grid; width: 100%; aspect-ratio: 1; place-items: center; padding: 0; color: var(--ink); font-size: clamp(2rem, 10vw, 4.5rem); font-weight: 800; line-height: 1; background: var(--paper); border: clamp(2px, 0.35vw, 4px) solid var(--ink); border-radius: clamp(0.45rem, 2vw, 0.8rem); cursor: pointer; transition: background-color 0.15s ease, transform 0.15s ease; }
+.cell-btn:hover:not(:disabled) { background: #f0f2f4; transform: scale(1.02); }
+.cell-btn:disabled { cursor: default; }
+.game-hint { font-size: 0.9rem; }
+.site-footer { flex: 0 0 auto; padding: 0.8rem 1rem; color: var(--accent); text-align: center; background: var(--ink); font-size: 0.8rem; }
+.site-footer p { color: inherit; font-size: inherit; }
+@media (max-width: 520px) {
+  body { padding: 0; }
+  .app-shell { min-height: 100dvh; border-radius: 0; }
+  main { justify-content: flex-start; padding-top: clamp(1.5rem, 8vw, 2.5rem); }
+  .board { width: min(100%, 30rem, 86vw); }
 }
-
-main p {
-  font-size: clamp(1rem, 2.5vh, 1.1rem);
-  color: #666;
+@media (max-height: 620px) and (orientation: landscape) {
+  body { padding: 0; }
+  .app-shell { min-height: 100dvh; border-radius: 0; }
+  .site-header, .site-footer { padding-block: 0.45rem; }
+  main { justify-content: flex-start; padding-block: 0.75rem 1rem; }
+  .game-heading { margin-bottom: 0.25rem; }
+  .board { width: min(60vh, 20rem); margin-block: 0.5rem; }
 }
-
-footer  {
-  background-color: #111;
-  color: #dbbc09;
-  padding: 2vh 1.2rem;
-  border-radius: 0 0 12px 12px; 
-  font-size: clamp(0.8rem, 2vh, 0.9rem);
-}
-.PlayButton{
-  width: 150px;      
-  height: 50px;      
-  font-size: 2rem;
-  color: #666;
-  border-radius: 12px;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }

@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p>Let's Play...</p>
-    <h1>TIC TAC TOE</h1>
+    <section class="home-content" aria-labelledby="home-title">
+        <p class="eyebrow">Let's play</p>
+        <h1 id="home-title">Tic Tac Toe</h1>
+        <p class="page-subtitle">A quick game for one player.</p>
     
-    <form action="/difficulty" method="GET" style="margin-top: 3vh;">
-        <button class="PlayButton" type="submit">Start</button>
-    </form>
+        <form action="/difficulty" method="GET" class="home-form">
+            <button class="PlayButton" type="submit">Start game</button>
+        </form>
+    </section>
 {% endblock %}

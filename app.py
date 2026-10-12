@@ -96,7 +96,7 @@ def start_game():
 
     ans = CheckWinner(current_board, PlayerSymbol, NPCSymbol)
     if ( ans == ' ' ):
-        result = 'Make Your Move..'
+        result = 'Your turn'
     elif(ans == PlayerSymbol):
         result = 'Player Won'
     elif(ans == NPCSymbol):
@@ -122,7 +122,7 @@ def play_turn():
     ans = CheckWinner(current_board, PlayerSymbol, NPCSymbol)
 
     if ( ans == ' ' ):
-        result = 'Make Your Move..'
+        result = 'Your turn'
     elif(ans == PlayerSymbol):
         result = 'Player Won'
         
@@ -150,7 +150,7 @@ def play_turn():
     ans = CheckWinner(current_board, PlayerSymbol, NPCSymbol)
 
     if ( ans == ' ' ):
-        result = 'Make Your Move..'
+        result = 'Your turn'
     elif(ans == PlayerSymbol):
         result = 'Player Won'
         
