@@ -31,9 +31,9 @@ w = [
 def get_symbols():
     first_player = session.get('FirstPlayer', 'HUMAN')
     if first_player == 'HUMAN':
-        return 'O', 'X' 
+        return 'X', 'O'   # player, NPC
     else:
-        return 'X', 'O' 
+        return 'O', 'X'
 
 
 
@@ -105,7 +105,8 @@ def start_game():
         result = 'Tie'
    
 
-    return render_template('game.html',difficulty = selected_value,Board=current_board,result=result )
+    return render_template('game.html', difficulty=selected_value, Board=current_board,
+                       result=result, player_symbol=PlayerSymbol)
 
 #Handles Button Press Using Json Data from game Html Which Has Java Script To Control Real Time Updation Without Full Reload Of Website
 @app.route('/play_turn', methods=['POST'])
@@ -205,7 +206,7 @@ def NPC_MOVE(current_board, Difficulty, PlayerSymbol, NPCSymbol):
             session.modified = True
         return
 
-    if Difficulty == "MEDIUM" and random.random() < 0.3:
+    if Difficulty == "MEDIUM" and random.random() < 0.2:
         empty_cells = [(i, j) for i in range(3) for j in range(3) if current_board[i][j] == ' ']
         if empty_cells:
             i, j = random.choice(empty_cells)

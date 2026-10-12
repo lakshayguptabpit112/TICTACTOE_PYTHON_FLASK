@@ -56,10 +56,35 @@ legend { width: 100%; margin-bottom: 0.55rem; color: var(--ink); font-weight: 75
 .hidden-radio:focus-visible + .btn, button:focus-visible, .backbutton:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .submit-btn { padding: 0.8rem 1rem; color: var(--paper); font-size: 1.05rem; background: var(--success); }
 .backbutton { margin-top: 1.2rem; padding: 0.65rem 1rem; color: var(--ink); background: transparent; border: 2px solid var(--line); border-radius: 0.65rem; cursor: pointer; font-weight: 700; }
-.backbutton[hidden] { display: none; }
+.backbutton.is-hidden { visibility: hidden; pointer-events: none; }
 .game-heading { margin-bottom: 0.8rem; }
-.status-message { min-height: 1.7rem; color: var(--ink); font-weight: 750; }
-.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.45rem, 2vw, 0.85rem); width: min(100%, 30rem, 72vw); margin: clamp(1rem, 3vw, 1.6rem) auto; aspect-ratio: 1; }
+.status-panel {
+  display: flex; align-items: center; gap: 0.8rem; width: min(100%, 30rem);
+  margin: 0 auto; padding: 0.75rem 0.9rem; text-align: left;
+  background: var(--paper); border: 1px solid var(--line); border-left: 0.35rem solid var(--accent);
+  border-radius: 0.8rem; box-shadow: 0 0.25rem 0.9rem rgba(17, 24, 39, 0.06);
+}
+.status-icon {
+  display: grid; flex: 0 0 auto; width: 2.25rem; height: 2.25rem; place-items: center;
+  color: var(--ink); font-size: 1.3rem; font-weight: 900; background: var(--accent); border-radius: 50%;
+}
+.status-copy { min-width: 0; }
+.status-label { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.status-message { min-height: 1.55rem; color: var(--ink); font-size: clamp(1.05rem, 3vw, 1.25rem); font-weight: 800; line-height: 1.25; }
+.status-thinking { border-left-color: #98a2b3; }
+.status-thinking .status-icon { color: var(--paper); background: #98a2b3; }
+.status-win { border-left-color: var(--success); }
+.status-win .status-icon { color: var(--paper); background: var(--success); }
+.status-loss { border-left-color: var(--ink); }
+.status-loss .status-icon { color: var(--paper); background: var(--ink); }
+.status-tie { border-left-color: var(--accent); }
+.status-tie .status-icon { background: var(--accent); }
+.board-shell {
+  width: min(100%, 30rem, 76vw); margin: clamp(1rem, 3vw, 1.6rem) auto;
+  padding: clamp(0.55rem, 2vw, 0.8rem); background: var(--ink); border-radius: 1rem;
+  box-shadow: 0 0.5rem 1.2rem rgba(17, 24, 39, 0.16);
+}
+.board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.45rem, 2vw, 0.85rem); width: 100%; aspect-ratio: 1; }
 .cell-btn { display: grid; width: 100%; aspect-ratio: 1; place-items: center; padding: 0; color: var(--ink); font-size: clamp(2rem, 10vw, 4.5rem); font-weight: 800; line-height: 1; background: var(--paper); border: clamp(2px, 0.35vw, 4px) solid var(--ink); border-radius: clamp(0.45rem, 2vw, 0.8rem); cursor: pointer; transition: background-color 0.15s ease, transform 0.15s ease; }
 .cell-btn:hover:not(:disabled) { background: #f0f2f4; transform: scale(1.02); }
 .cell-btn:disabled { cursor: default; }
@@ -70,7 +95,7 @@ legend { width: 100%; margin-bottom: 0.55rem; color: var(--ink); font-weight: 75
   body { padding: 0; }
   .app-shell { min-height: 100dvh; border-radius: 0; }
   main { justify-content: flex-start; padding-top: clamp(1.5rem, 8vw, 2.5rem); }
-  .board { width: min(100%, 30rem, 86vw); }
+  .board-shell { width: min(100%, 30rem, 86vw); }
 }
 @media (max-height: 620px) and (orientation: landscape) {
   body { padding: 0; }
@@ -78,7 +103,7 @@ legend { width: 100%; margin-bottom: 0.55rem; color: var(--ink); font-weight: 75
   .site-header, .site-footer { padding-block: 0.45rem; }
   main { justify-content: flex-start; padding-block: 0.75rem 1rem; }
   .game-heading { margin-bottom: 0.25rem; }
-  .board { width: min(60vh, 20rem); margin-block: 0.5rem; }
+  .board-shell { width: min(60vh, 20rem); margin-block: 0.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }

@@ -6,18 +6,26 @@
         <p class="eyebrow">{{ difficulty|title }} mode</p>
         <h1 id="game-title">Your game</h1>
     </div>
-    <p class="Result status-message" aria-live="polite" role="status">{{result}}</p>
+    <div class="status-panel status-your-turn" id="status-panel" aria-live="polite" role="status">
+        <span class="status-icon" id="status-icon" aria-hidden="true">!</span>
+        <div class="status-copy">
+            <span class="status-label" id="status-label">Game status</span>
+            <p class="Result status-message">{{result}}</p>
+        </div>
+    </div>
     
-    <div class="board" role="grid" aria-label="Tic tac toe board">
-        {% for row in range(3) %}
-            {% for col in range(3) %}
-                {% set value = Board[row][col] %}
-                <button type="button" class="cell-btn" id="cell-{{row}}-{{col}}" role="gridcell" aria-label="Row {{row + 1}}, column {{col + 1}}{% if value != ' ' %}, {{value}}{% endif %}" {% if value != ' ' %}disabled{% endif %} onclick="makeMove({{row}}, {{col}})">{{value if value != ' ' else ''}}</button>
+    <div class="board-shell">
+        <div class="board" role="grid" aria-label="Tic tac toe board">
+            {% for row in range(3) %}
+                {% for col in range(3) %}
+                    {% set value = Board[row][col] %}
+                    <button type="button" class="cell-btn" id="cell-{{row}}-{{col}}" role="gridcell" aria-label="Row {{row + 1}}, column {{col + 1}}{% if value != ' ' %}, {{value}}{% endif %}" {% if value != ' ' %}disabled{% endif %} onclick="makeMove({{row}}, {{col}})">{{value if value != ' ' else ''}}</button>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+        </div>
     </div>
 
-    <button type="button" class="backbutton" id="back-button" hidden>
+    <button type="button" class="backbutton is-hidden" id="back-button" aria-hidden="true" disabled>
         Back to difficulty
     </button>
     <p class="game-hint" id="game-hint">Tap an empty square to make your move.</p>
@@ -26,7 +34,13 @@
 
 {% block extra_js %}
 <script>
+    const PLAYER_SYMBOL = "{{ player_symbol }}";      // change if your player uses a different symbol
+    const MIN_THINKING_MS = 400;    // keeps "Computer is thinking…" from flashing
+
     const backButton = document.querySelector("#back-button");
+    const statusPanel = document.querySelector("#status-panel");
+    const statusIcon = document.querySelector("#status-icon");
+    const statusLabel = document.querySelector("#status-label");
     const resultElement = document.querySelector(".Result");
     const hintElement = document.querySelector("#game-hint");
     const gameOverResults = new Set(["Player Won", "NPC Won", "Tie"]);
@@ -47,7 +61,7 @@
                     button.innerText = displayedValue;
                 }
 
-                button.disabled = value !== " " || moveInProgress;
+                button.disabled = value !== " ";
                 button.setAttribute("aria-label", `Row ${r + 1}, column ${c + 1}${value !== " " ? `, ${value}` : ", empty"}`);
             }
         }
@@ -60,11 +74,36 @@
     }
 
     function setGameState(result) {
-        resultElement.innerText = result;
+        const states = {
+            "Your turn": { name: "your-turn", label: "Your turn", icon: "!", message: "Your turn" },
+            "Computer is thinking...": { name: "thinking", label: "Computer turn", icon: "…", message: "Computer is thinking…" },
+            "Player Won": { name: "win", label: "Game complete", icon: "✓", message: "You won!" },
+            "NPC Won": { name: "loss", label: "Game complete", icon: "×", message: "Computer won" },
+            "Tie": { name: "tie", label: "Game complete", icon: "=", message: "It’s a tie" }
+        };
+        const state = states[result] || states["Your turn"];
         const finished = gameOverResults.has(result);
-        backButton.hidden = !finished;
-        hintElement.innerText = finished ? "Start another game when you are ready." : "Tap an empty square to make your move.";
+
+        statusPanel.className = `status-panel status-${state.name}`;
+        statusIcon.innerText = state.icon;
+        statusLabel.innerText = state.label;
+        resultElement.innerText = state.message;
+
+        if (finished) {
+            hintElement.innerText = "Start another game when you are ready.";
+        } else if (result === "Computer is thinking...") {
+            hintElement.innerText = "Please wait for the computer’s move.";
+        } else {
+            hintElement.innerText = "Tap an empty square to make your move.";
+        }
+
+        backButton.classList.toggle("is-hidden", !finished);
+        backButton.disabled = !finished;
+        backButton.setAttribute("aria-hidden", String(!finished));
         document.querySelector(".game-content").classList.toggle("game-over", finished);
+
+        // Game over: no more clicks on empty squares
+        if (finished) lockBoard();
     }
 
     setGameState(resultElement.innerText);
@@ -72,26 +111,40 @@
     function makeMove(row, col) {
         if (moveInProgress) return;
         moveInProgress = true;
-        lockBoard();
-        hintElement.innerText = "Computer is thinking...";
-        const payload = { row: row, col: col };
 
-        fetch('/play_turn', {
+        // Show the player's move instantly (no grey flash of the whole board)
+        const clicked = document.getElementById(`cell-${row}-${col}`);
+        clicked.innerText = PLAYER_SYMBOL;
+        clicked.disabled = true;
+
+        setGameState("Computer is thinking...");
+
+        const request = fetch('/play_turn', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ row: row, col: col })
         })
         .then(response => {
             if (!response.ok) throw new Error("The move could not be completed.");
             return response.json();
-        })
-        .then(data => {
+        });
+
+        // Wait for BOTH the server and a short minimum delay
+        const minDelay = new Promise(resolve => setTimeout(resolve, MIN_THINKING_MS));
+
+        Promise.all([request, minDelay])
+        .then(([data]) => {
             moveInProgress = false;
             updateBoard(data.board);
             setGameState(data.result);
         })
         .catch(() => {
-            window.location.reload();
+            // Undo the move and show a message instead of reloading the page
+            moveInProgress = false;
+            clicked.innerText = "";
+            clicked.disabled = false;
+            setGameState("Your turn");
+            resultElement.innerText = "Something went wrong. Try again.";
         });
     }
 </script>
